@@ -1,0 +1,33 @@
+<%- include('header',{type:"signup"}) %>
+<div>
+    <form action="">
+        用户名：<input type="text" name="name" id="">
+        密码：<input type="password" name = "password">
+        重复：<input type="password" name="repeatpass">
+        <input type="button" value="确定" class="submit">
+    </form>
+</div>
+<script>
+    $('.submit').click(function(){
+        // 各种判断
+        $.ajax({
+            url:'/signup',
+            data:{
+                name:$('input[name=name]').val(),
+                password:$('input[name=password]').val(),
+                repeatpass:$('input[name=repeatpass]').val()
+            },
+            type:'POST',
+            cache:false,
+            dataType:'json',
+            success:function(msg){
+                if(msg.code == 200){
+                    alert('注册成功');
+                    setTimeout(() => {
+                        window.location.href = '/signin'
+                    }, 1000);
+                }
+            }
+        })
+    })
+</script>
