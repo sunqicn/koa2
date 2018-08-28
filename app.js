@@ -43,19 +43,16 @@ app.use(staticCache(path.join(__dirname, './images'), {
 app.use(views(path.join(__dirname, './views'), {
     extension: 'ejs'
 }))
-app.use(bodyParser({
-    formLimit: '1mb'
-}))
 // POST请求
 app.use(bodyParser({
     formLimit: '1mb'
 }))
 
 // 路由
-// app.use(require('./routers/signin.js').routes())
+app.use(require('./routers/signin.js').routes())
 app.use(require('./routers/signup.js').routes())
-// app.use(require('./routers/posts.js').routes())
-// app.use(require('./routers/signout.js').routes())
+app.use(require('./routers/posts.js').routes())
+app.use(require('./routers/signout.js').routes())
 
 // 监听
 app.listen(process.env.PORT || config.port)

@@ -8,6 +8,49 @@
     <title>Document</title>
 </head>
 <body>
-    <p>这个是header</p>
+    <div>
+        <% if(session.user){ %>
+            hello,<strong><%= session.user %></strong>
+        <% }else{ %>
+            欢迎注册登录
+        <% } %>
+
+        
+            <div class="isuser">
+                <% if(session.user){ %>
+                    <ul>
+                        <li>首页</li>
+                        <li>详情</li>
+                        <li><a class="signout" href="">退出</a></li>
+                    </ul>
+                <% }else{ %>
+                    <ul>
+                        <li>首页</li>
+                        <li>详情</li>
+                        <li><a href="/signin">登录</a></li>
+                        <li><a href="/signup">注册</a></li>
+                    </ul>
+                <% } %>
+            </div>
+    </div>
+    
 </body>
 </html>
+<script>
+    $('.signout').click(function(event){
+        event.preventDefault();
+        $.ajax({
+            url:'/signout',
+            type:'GET',
+            success:function(res){
+                if(res){
+                    alert('退出成功');
+                    location.href='/posts'
+                }
+            },
+            error:function(){
+                alert('失败')
+            }
+        })
+    })
+</script>
