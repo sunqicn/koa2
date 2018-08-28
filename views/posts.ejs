@@ -1,7 +1,90 @@
 <%- include('./header',{type:'all'}) %>
 <div>
-    
-    <div>
-        这个是列表页
-    </div>
+    <% if(posts.length>0){ %>
+        <ul class="posts">
+            <% post.forEach(function(res){ %>
+                <li>
+                    <div class="author">
+                        <span title="<%= res.name %>"><a href="/posts?author=<%= res.name %> ">author: <%= res.name %></a></span>
+                        <span>评论数：<%= res.comments %></span>
+                        <span>浏览量：<%= res.pv %></span>
+                    </div>
+                    <div class="comment_pv">
+                        <span><%= res.moment %></span>
+                    </div>
+                    <a href="/posts/<%= res.id %>">
+                        <div class="title">
+                            <img class="userAvator" src="images/<%= res.avator %>"  alt="avator">
+                            <%- res.title %>
+                        </div>
+                        <div class="content markdown">
+                            <%- res.content %>
+                        </div>
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+    <% }else{ %>
+        <div>暂时还没有文章</div>
+    <% }%>
+    <!-- 分页 -->
+    <div style="margin-top: 30px" class="pagination" id="page"></div>	
 </div>
+
+<script src="/pagination.js"></script>
+<script>
+		pagination({
+			selector: '#page',
+			totalPage: <%= postsPageLength %>,
+			currentPage: 1,
+			prev: '上一页',
+			next: '下一页',
+			first: true,
+			last: true,
+			showTotalPage: true,
+			count: 2//当前页前后显示的数量
+		},function(val){
+			// 当前页
+			$.ajax({
+				url: "posts/page",
+				type: 'POST',
+				data:{
+					page: val
+				},
+				cache: false,
+				success: function (msg) {
+					console.log(msg)
+					if (msg != 'error') {
+						$('.posts').html(' ')
+						$.each(msg,function(i,val){
+							//console.log(val.content)
+							$('.posts').append(
+								'<li>'+
+									'<div class=\"author\">'+
+										'<span title=\"'+ val.name +'\"><a href=\"/posts?author='+ val.name +' \">author: '+ val.name +'</a></span>'+
+										'<span>评论数：'+ val.comments +'</span>'+
+										'<span>浏览量：'+ val.pv +'</span>'+
+									'</div>'+
+									'<div class=\"comment_pv\">'+
+										'<span>'+ val.moment +'</span>'+
+									'</div>'+
+									'<a href=\"/posts/'+ val.id +'\">'+
+										'<div class=\"title\">'+
+											'<img class="userAvator" src="images/'+ val.avator +'" alt=\"avator\">'+
+											 val.title +
+										'</div>'+
+										'<div class=\"content markdown\">'+
+											 val.content +
+										'</div>'+
+									'</a>'+
+								'</li>'
+							)
+						})
+					}else{
+						alert('分页不存在')
+					} 
+				}
+			})
+		
+		})
+	</script>
